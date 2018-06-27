@@ -198,8 +198,14 @@
     camera = new FpsCamera(50, 1, 10000);
     camera.position.set(0, 20, 100);
 
-    controls = new THREE.EditorControls(camera);
-    camera.lookAt(controls.center);
+//  controls = new THREE.EditorControls(camera);
+//  camera.lookAt(controls.center);
+
+    controls = new THREE.FirstPersonControls( camera );
+    controls.movementSpeed = 60;
+    controls.lookSpeed = 0.05;
+    controls.noFly = false;
+    controls.lookVertical = true;
 
     scene.add(directionalLight(0xffffff,  1000, 1000,  1000, 0.5));
     scene.add(directionalLight(0xffffff,  1000, 1000, -1000, 0.5)); 
@@ -274,17 +280,19 @@
     };
 
     function update() {
-
         var delta = clock.getDelta();
         var time = clock.getElapsedTime();
+        controls.update( delta );
+    }
 
+/*
         var $update = $(".update");
         if ( $update.length > 0 ) {
             for ( var i = 0; i < $update.length; i++ ){
                 if ( !!$update[i].update ) $update[i].update(delta);
             }
         }
-    }
+*/
 
 //  Event Listeners.
 
