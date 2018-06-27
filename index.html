@@ -307,6 +307,52 @@
 
 </script>
 
+<script>
+
+//  form-panel.js
+
+//  Every dialoge form panel point to a formTarget
+//  that is a form and deals with this target only.
+
+    var target; // IMPORTANT //
+
+    var formPanelHtml = '<div id="form-panel" title="Form Panel">';
+
+    var $FormPanel = $(formPanelHtml).dialog({ 
+        autoOpen: false, 
+        show: { effect: 'fade', duration: 500 },
+        hide: { effect: 'fade', duration: 500 },
+    });
+
+    $FormPanel.on( "dialogopen", function( event, ui ) {
+
+        $FormPanel.active = true;
+        debugMode && console.log( "target:", !!target );
+        debugMode && console.log( "dialog opened:", $FormPanel.active );
+        
+    });
+
+    $FormPanel.on( "dialogclose", function( event, ui ) {
+
+        target = undefined;
+        $FormPanel.active = false;
+        $FormPanel.contents().remove();
+
+        debugMode && console.log( "target:", target );
+        debugMode && console.log( "dialog closed:", !$FormPanel.active );
+
+    });
+
+    $FormPanel.loadForm = function(component, option){
+        var formComponent = componentsFolder + component; 
+        $FormPanel.load(formComponent, function(resoponse, status, xhr){
+            debugMode && console.log("form loaded:", status);
+            if (!!option) $FormPanel.dialog( "option", option );
+        });
+    }
+
+</script>
+
 
 <script>
 
