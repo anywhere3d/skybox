@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <meta name="description" contents="Dress Outfit Insert Form from aw3d-v1.0 boilerplate.">
+    <link rel="manifest" href="/manifest.json">
+    <title>Skybox insert form (v0.2)</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootbox-dialoges.css">
+    <link rel="stylesheet" href="/css/side-panels.css">
+    <link rel="stylesheet" href="/css/messg.css" >
+    <link rel="stylesheet" href="/css/spectrum.css">
+    <link rel="stylesheet" href="/css/colorpicker.css">
+    <link rel="stylesheet" href="/css/spinner.css">
+    <link rel="stylesheet" href="/css/jquery-ui.css">
+    <link rel="stylesheet" href="/css/alerts.css">
+    <link rel="stylesheet" href="/css/panel-ui.css">
+    <link rel="stylesheet" href="/css/anywhere3d.css">
+    <link rel="stylesheet" href="/css/joystick.css">
+    <link rel="stylesheet" href="/css/uppy.css">
+</head>
+
+<body>
+
+<style>
+    .navbar-nav > li > a.menu-item,
+    .navbar-nav > li > div > a.menu-item {font-weight:normal;}
+    .navbar-nav > li > a.menu-item:hover,
+    .navbar-nav > li > div > a.menu-item:hover {color:aquamarine;}
+    .navbar-nav > li > div > a.menu-item { text-decoration:none }
+    #nav-btn-login { margin-left:10px; }
+    #nav-btn-login > a { color:#fff; font-weight:bold; font-size:14px; text-decoration:none; }
+    #nav-btn-snapshot > a { color:#38c0ee; }
+</style>
+
+<nav class="navbar navbar-default navbar-fixed-top">
+
+    <div class="container">
+
+        <div class="navbar-header">
+            <div class="navbar-brand">
+                <a href="https://anywhere3d.org" class="navbar-caption" title="anywhere3d.org">anywhere3d</a>
+            </div>
+            <a class="navbar-logo pull-left"><img src="https://i.imgur.com/09bC4Q0.png" alt="anywhere3d logo"></a>
+            <ul class="nav navbar-nav navbar-right pull-left">
+                
+                <li class="first menu-item"></li>
+
+                <li id="nav-item-over" style="display:none;"><a class="menu-item">Overview</a></li>
+                <li id="nav-item-home" style="display:none;"><a class="menu-item">Home</a></li>
+                <li id="nav-item-dash" style="display:none;"><a class="menu-item">Dashboard</a></li>
+                <li id="nav-item-exam" style="display:none;"><a class="menu-item">Examples</a></li>
+
+            </ul>
+        </div>
+
+        <ul class="nav navbar-nav navbar-right">
+
+            <li class="pull-right">
+                <div class="navbar-btn btn btn-primary btn-white-outline" id="nav-btn-login" style="display:none;">
+                    <a class="menu-item">Login</a>
+                </div>
+            </li>
+
+        </ul>
+
+    </div>
+
+</nav>
+
+<style>
+    body { margin:0px; height:100vh; overflow:hidden; font-family: Arial, sans-serif; }
+    canvas { display:block !important; }
+    #body-section { 
+        height:100%; padding-top:0px; padding-bottom:0px; 
+        background-color:rgba(0,0,0,1); overflow:hidden; 
+    }
+    #render-container { 
+        width:100%; height:100%; 
+        opacity:1; background-color:rgb(0,0,0); 
+    }
+    #splash-holder,
+    #auth-holder { 
+        position:absolute; left:0px; top:0px; width:100%; height:100%;
+        text-align:center; background-color:rgba(255,255,255,0); z-index:1; 
+    }
+    .twitter-holder { text-align:center; margin:10px 0px; }    
+    .patreon-holder { display:none; text-align:center; }
+    #joystick1, #joystick2, #jumpButton  { z-index:0 !important; }
+    .menu-helpers a,
+    .editor-helpers a,
+    .mode-helpers a,
+    .updater-helpers a,
+    .helpers a { font:bold 16px Arial; cursor:pointer; text-decoration:none; }
+    .mode-helper a { color:fuchsia; }
+    .ui-dialog { opacity:1 !important; }
+    .non-ready { display:none; }
+    .updater   { cursor:pointer; }
+    
+    .side-holder { width:84%; margin-bottom:10px; }
+    .text-field { margin-bottom:10px; }
+    #background-insert-button { margin-bottom:20px; }
+    #form-holder { margin-bottom:20px; }
+
+</style>
+
+<section class="mbr-section mbr-after-navbar" id="body-section">
+
+    <div id="render-container" class="mbr-overlay"></div>
+
+    <div class="side-panel" id="right-side">
+        <div id="right-side-pinbtn" title="click this to pin/unpin panel"></div>
+
+        <div id="right-side-content">
+
+            <div id="background-button-holder" class="side-holder hidden">
+                <div id="background-select-button" class="form-control btn btn-default btn-white-outline">Open skybox select panel</div>
+            </div>
+
+            <div id="editor-holder"></div>
+
+        </div>
+    </div>
+
+</section>
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/jquery.lazy.js"></script>
+<script src="/js/jquery.lazy.plugins.js"></script>
+<script src="/js/jquery-ui.js"></script>
+<script src="/js/validator.min.js"></script>
+
+<script>
+    debugMode = true;
+    var jsFolder = "/js/";
+    var scriptsFolder = "/scripts/";
+    var componentsFolder = "/components/";
+    $.ajaxSetup({ cache: false });
+</script>
+
+
+<script async src="/js/alerts.js"></script>
+<script async src="/js/bootbox.min.js"></script>
+<script async src="/js/bootstrap.min.js"></script>
+<script async src="/js/DeviceDetector.js"></script>
+<script async src="/js/MathDecimalAdjustment.js"></script>
+<script async src="/js/html2canvas.js"></script>
+<script async src="/js/spectrum.js"></script>
+<script async src="/js/watermark.js"></script>
+<script async src="/js/sharer.js"></script>
+<script async src="/js/side-panels.js"></script>
+
+<script src="/three/three.js"></script>
+<script src="/three/EditorControls.js"></script>
+<script src="/three/Detector.js"></script>
+<script src="/three/Projector.js"></script>
+<script src="/three/Animation.js"></script>
+<script src="/three/AnimationHandler.js"></script>
+<script src="/three/KeyFrameAnimation.js"></script>
+<script src="/js/scene-helpers.js"></script>
+
+<script>
+    THREE.Cache.enabled = true;
+    THREE.Texture.DEFAULT_IMAGE = "https://i.imgur.com/8eycYxu.png";
+</script>
+
+
+<script>
+
+//  scene.js
+
+    var fontFolder = "/three/fonts/";
+    var fontPath = fontFolder + "helvetiker_regular.typeface.json";
+    var sceneContainerSelector = "#render-container";
+    var container = $(sceneContainerSelector)[0];
+
+    var scene, 
+        camera, 
+        renderer, 
+        controls;
+
+    var sceneLights, 
+        axisCustomHelper, 
+        axisOriginHelper;
+
+    var projector, 
+        keyboard, 
+        clock;
+
+    var scenename = "editor";
+
+    scene = new THREE.Scene();
+    scene.name = scenename;
+
+    camera = new FpsCamera(50, 1, 10000);
+    camera.position.set(0, 20, 100);
+
+    controls = new THREE.EditorControls(camera);
+    camera.lookAt(controls.center);
+
+    scene.add(directionalLight(0xffffff,  1000, 1000,  1000, 0.5));
+    scene.add(directionalLight(0xffffff,  1000, 1000, -1000, 0.5)); 
+    scene.add(directionalLight(0xffffff, -1000, 1000,  1000, 0.5)); 
+    scene.add(directionalLight(0xffffff, -1000, 1000, -1000, 0.5));
+    scene.add(directionalLight(0xffffff,     0,-5000,     0, 0.3));
+
+//    groundHelper = new GroundHelper(1000, 10);  
+//    axisCustomHelper = new CustomAxisHelper(1200);
+//    axisOriginHelper = new OriginAxisHelper(1000);
+
+    projector = new THREE.Projector();
+    clock = new THREE.Clock();
+
+    renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        preserveDrawingBuffer: true,
+    });
+
+    renderer.shadowMap.enabled = true;
+    renderer.setPixelRatio( window.devicePixelRatio );
+    renderer.setSize( container.clientWidth, container.clientHeight );
+    container.appendChild( renderer.domElement );
+
+    sceneBackground([
+        "https://i.imgur.com/v6bjQLb.jpg", // "posx.jpg",
+        "https://i.imgur.com/lwrlr6P.jpg", // "negx.jpg", 
+        "https://i.imgur.com/kKUKBJg.jpg", // "posy.jpg", 
+        "https://i.imgur.com/N0oZlJR.jpg", // "negy.jpg", 
+        "https://i.imgur.com/x9q8z0K.jpg", // "posz.jpg", 
+        "https://i.imgur.com/HYcK7Ii.jpg", // "negz.jpg"
+    ]);
+
+    function sceneBackground( urls ){
+        if (!scene || Number(THREE.REVISION) < 78) return;
+        var loader = new THREE.CubeTextureLoader();
+        loader.load( urls, function(texture){
+            scene.background = texture;
+            scene.background.needsUpdate = true;
+        });
+    }
+
+</script>
+
+
+<script>
+
+//  app.js
+
+    var debugMode;
+    var mouse = new THREE.Vector2();
+
+    var rendererHalfWidth = renderer.domElement.width * 0.5;
+    var rendererHalfHeight = renderer.domElement.height * 0.5;
+
+//  Animate.
+
+    animate();
+
+    function animate(){
+
+        windowAnimationFrameRequestID = requestAnimationFrame( animate );
+
+        render();
+
+        update();
+
+    }
+
+    function render(){ 
+        renderer.render( scene, camera ); 
+    };
+
+    function update() {
+
+        var delta = clock.getDelta();
+        var time = clock.getElapsedTime();
+
+        var $update = $(".update");
+        if ( $update.length > 0 ) {
+            for ( var i = 0; i < $update.length; i++ ){
+                if ( !!$update[i].update ) $update[i].update(delta);
+            }
+        }
+    }
+
+//  Event Listeners.
+
+    $(window).on( "resize", onWindowResize );
+
+    function onWindowResize() {
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize( container.clientWidth, container.clientHeight );
+        rendererHalfWidth = renderer.domElement.width * 0.5;
+        rendererHalfHeight = renderer.domElement.height * 0.5;
+    }
+
+    $(window).on( "mousemove", onMouseMove );
+
+    function onMouseMove( event ) {
+        mouse.x = ( event.clientX - rendererHalfWidth );
+        mouse.y = ( event.clientY - rendererHalfHeight );
+    }
+
+</script>
+
+
+<script>
+
+//  background-select-button.html.
+
+    var backgroundSelectButtonSelector = "#background-select-button";
+
+//  Define target.
+    $(backgroundSelectButtonSelector).on("click", function (){
+        if ( !$FormPanel.active && !!scene.background ){
+            target = scene.background; // cube texture.
+        } else {
+            target = undefined;
+        }
+    });
+
+//  Import dialog components.
+    $(backgroundSelectButtonSelector).on("click", function (){
+        if ( !$FormPanel.active ){
+
+            $FormPanel.dialog( "option", {
+                width    : 600,
+                minWidth : 600,
+                maxWidth : 600,
+                height   : 600,
+                minHeight: 600,
+                maxHeight: 600,
+                title: "Skybox Select Panel"
+            });
+
+        }
+
+    });
+
+//  Open/Close dialog.
+    $(backgroundSelectButtonSelector).on("click", function (){
+        if ( !$FormPanel.active ){
+            $FormPanel.dialog("open");
+        } else {
+            $FormPanel.dialog("close");
+        }
+    });
+/*
+//  Load component.
+//  $FormPanel.loadForm("skybox-select-buttons.html");
+    $(backgroundSelectButtonSelector).on("click", function(){
+        if ( $FormPanel.active ){
+            var skyboxSelectButtonsComponent = componentsFolder + "skybox-select-buttons.html";
+            $FormPanel.load(skyboxSelectButtonsComponent, function(resoponse, status, xhr){
+                debugMode && console.log("skybox-select-buttons:", status);
+            });
+        }
+    });
+*/
+</script>
+
+</body>
+</html>
+
+
