@@ -353,6 +353,18 @@
 
 </script>
 
+<script>
+
+//  Controls.
+    $FormPanel.on( "dialogopen", function( event, ui ) {
+        if (!!window.controls) controls.enabled = false;
+    });
+
+    $FormPanel.on( "dialogclose", function( event, ui ) {
+        if (!!window.controls) controls.enabled = true;
+    });
+
+</script>
 
 <script>
 
