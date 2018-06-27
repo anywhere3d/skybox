@@ -116,7 +116,7 @@
 
         <div id="right-side-content">
 
-            <div id="background-button-holder" class="side-holder hidden">
+            <div id="background-button-holder" class="side-holder">
                 <div id="background-select-button" class="form-control btn btn-default btn-white-outline">Open skybox select panel</div>
             </div>
 
@@ -313,33 +313,6 @@
 //  background-select-button.html.
 
     var backgroundSelectButtonSelector = "#background-select-button";
-
-//  Define target.
-    $(backgroundSelectButtonSelector).on("click", function (){
-        if ( !$FormPanel.active && !!scene.background ){
-            target = scene.background; // cube texture.
-        } else {
-            target = undefined;
-        }
-    });
-
-//  Import dialog components.
-    $(backgroundSelectButtonSelector).on("click", function (){
-        if ( !$FormPanel.active ){
-
-            $FormPanel.dialog( "option", {
-                width    : 600,
-                minWidth : 600,
-                maxWidth : 600,
-                height   : 600,
-                minHeight: 600,
-                maxHeight: 600,
-                title: "Skybox Select Panel"
-            });
-
-        }
-
-    });
 
 //  Open/Close dialog.
     $(backgroundSelectButtonSelector).on("click", function (){
